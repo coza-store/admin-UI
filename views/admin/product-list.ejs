@@ -1,0 +1,62 @@
+<%- include('../includes/begin.ejs') %>
+    <link rel="stylesheet" href="/css/main.css">
+    </head>
+
+    <body>
+        <%- include('../includes/navigation.ejs') %>
+
+            <main>
+                <% if (products.length > 0) { %>
+                    <div class="grid">
+                        <% for (let product of products) { %>
+                            <article class="card product-item">
+                                <header class="card__header">
+                                    <h1 class="product__title">
+                                        <%= product.name %>
+                                    </h1>
+                                </header>
+                                <div class="card__image slider">
+                                    <a href="#slide-1<%=product._id%>">1</a>
+                                    <a href="#slide-2<%=product._id%>">2</a>
+                                    <a href="#slide-3<%=product._id%>">3</a>
+                                    <div class="slides">
+                                        <div id="slide-1<%=product._id%>">
+                                            <img src="<%=product.imageUrl.detail_1 %>" alt="<%= product.name %>">
+                                        </div>
+                                        <div id="slide-2<%=product._id%>">
+                                            <img src="<%=product.imageUrl.detail_2 %>" alt="<%= product.name %>">
+                                        </div>
+                                        <div id="slide-3<%=product._id%>">
+                                            <img src="<%=product.imageUrl.detail_3 %>" alt="<%= product.name %>">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card__content">
+                                    <h2 class="product__price">$
+                                        <%= product.price %>
+                                    </h2>
+                                    <p style="margin-top: 20px;" class="product__description">
+                                        <%= product.description %>
+                                    </p>
+                                </div>
+                                <div class="card__content">
+                                    <p class="product__filter" style="text-align: center;">
+                                        Filter: <span><%= product.filter %></span>
+                                    </p>
+                                </div>
+                                <div class="card__actions">
+                                    <a href="/edit-product/<%=product._id %>?edit=true" class="btn">Edit</a>
+                                    <form action="/delete-product" method="POST">
+                                        <input type="hidden" value="<%=product._id %>" name="productId">
+                                        <button class="btn" type="submit">Delete</button>
+                                    </form>
+
+                                </div>
+                            </article>
+                            <% } %>
+                    </div>
+                    <% } else { %>
+                        <h1 style="text-align: center;">No Products Found!</h1>
+                        <% } %>
+            </main>
+            <%- include('../includes/end.ejs') %>
