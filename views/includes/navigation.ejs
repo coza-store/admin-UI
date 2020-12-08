@@ -10,6 +10,12 @@
                 <a class="<%= path === '/add-product' ? 'active' : '' %>" href="/add-product">Add Product
                 </a>
             </li>
+            <li class="main-header__item">
+                <form action="/products" method="GET">
+                    <input type="text" name="search" placeholder="Search">
+                    <button type="submit">Search</button>
+                </form>
+            </li>
         </ul>
     </nav>
 </header>

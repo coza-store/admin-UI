@@ -5,22 +5,22 @@
     <body>
         <%- include('../includes/navigation.ejs') %>
             <main>
-                <form class="product-form" action="/<% if(editing) { %>edit-product <% } else { %>add-product <% } %>  " method="POST">
+                <form class="product-form" action="/<% if(editing) { %>edit-product <% } else { %>add-product <% } %> " method="POST" enctype="multipart/form-data">
                     <div class="form-control">
                         <label for="name">Title</label>
                         <input type="text" name="name" id="name" value="<% if(editing) { %><%=product.name %><% } %>">
                     </div>
                     <div class="form-control">
                         <label for="imageUrl1">Image URL detail-1</label>
-                        <input type="text" name="imageUrl1" id="imageUrl1" value="<% if(editing) { %><%=product.imageUrl.detail_1 %><% } %>">
+                        <input type="file" name="imageUrl" id="imageUrl1">
                     </div>
                     <div class="form-control">
                         <label for="imageUrl2">Image URL detail-2</label>
-                        <input type="text" name="imageUrl2" id="imageUrl2" value="<% if(editing) { %><%=product.imageUrl.detail_2 %><% } %>">
+                        <input type="file" name="imageUrl" id="imageUrl2">
                     </div>
                     <div class="form-control">
                         <label for="imageUrl3">Image URL detail-3</label>
-                        <input type="text" name="imageUrl3" id="imageUrl3" value="<% if(editing) { %><%=product.imageUrl.detail_3 %><% } %>">
+                        <input type="file" name="imageUrl" id="imageUrl3">
                     </div>
                     <div class="form-control">
                         <label for="price">Price</label>

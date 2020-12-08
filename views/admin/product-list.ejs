@@ -55,8 +55,10 @@
                             </article>
                             <% } %>
                     </div>
-                    <% } else { %>
-                        <h1 style="text-align: center;">No Products Found!</h1>
-                        <% } %>
+                    <%- include('../includes/pagination.ejs',
+                    {currentPage:currentPage,prevPage:prevPage,hasPrevPage:hasPrevPage,hasNextPage:hasNextPage,nextPage:nextPage,lastPage:lastPage}) %>
+                        <% } else { %>
+                            <h1 style="text-align: center;">No Products Found!</h1>
+                            <% } %>
             </main>
             <%- include('../includes/end.ejs') %>

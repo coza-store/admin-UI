@@ -2,15 +2,34 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-
-const app = express();
-
+const multer = require('multer');
 const adminRoutes = require('./routes/adminRoutes');
 const errorHandler = require('./controllers/errorController');
 const Admin = require('./models/adminModel');
+const app = express();
+
+//storage image for user
+const imageStorage = multer.diskStorage({
+    destination: (req, file, callback) => {
+        callback(null, 'images/products');
+    },
+    filename: (req, file, callback) => {
+        callback(null, file.originalname);
+    }
+});
+const imageFilter = (req, file, callback) => {
+    if (file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
+        callback(null, true);
+    } else {
+        callback(null, false);
+    }
+};
+
+app.use(multer({ storage: imageStorage, fileFilter: imageFilter }).array('imageUrl', 3));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');

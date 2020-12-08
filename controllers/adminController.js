@@ -1,4 +1,5 @@
 const Product = require('../models/productModel');
+const ITEMS_PER_PAGE = 10;
 
 exports.getIndex = (req, res, next) => {
     res.render('admin/index', {
@@ -19,12 +20,13 @@ exports.getAddProduct = (req, res, next) => {
 
 //method them product moi
 exports.postAddProduct = (req, res, next) => {
+    const images = req.files;
+    const image_1 = '/' + images[0].path;
+    const image_2 = '/' + images[1].path;
+    const image_3 = '/' + images[2].path;
     const name = req.body.name;
     const price = req.body.price;
     const description = req.body.description;
-    const image_1 = req.body.imageUrl1;
-    const image_2 = req.body.imageUrl2;
-    const image_3 = req.body.imageUrl3;
     const filter = req.body.filter;
     const product = new Product({
         name: name,
@@ -51,14 +53,60 @@ exports.postAddProduct = (req, res, next) => {
 
 //render trang toan bo san pham
 exports.getProducts = (req, res, next) => {
-    Product.find()
-        .then(products => {
-            res.render('admin/product-list', {
-                pageTitle: 'Products',
-                path: '/products',
-                products: products
+    const page = +req.query.page || 1;
+    let totalItems;
+    if (req.query.search) {
+        const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+        Product.find({ name: regex })
+            .countDocuments()
+            .then(numOfProducts => {
+                totalItems = numOfProducts;
+                return Product
+                    .find({ name: regex })
+                    .skip((page - 1) * ITEMS_PER_PAGE)
+                    .limit(ITEMS_PER_PAGE);
+
             })
-        })
+            .then(products => {
+                res.render('admin/product-list', {
+                    pageTitle: 'All products',
+                    path: '/products/?search=',
+                    products: products,
+                    currentPage: page,
+                    totaProducts: totalItems,
+                    hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+                    hasPrevPage: page > 1,
+                    nextPage: page + 1,
+                    prevPage: page - 1,
+                    lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE)
+                })
+            })
+    } else {
+        Product.find()
+            .countDocuments()
+            .then(numOfProducts => {
+                totalItems = numOfProducts;
+                return Product
+                    .find()
+                    .skip((page - 1) * ITEMS_PER_PAGE)
+                    .limit(ITEMS_PER_PAGE);
+
+            })
+            .then(products => {
+                res.render('admin/product-list', {
+                    pageTitle: 'All products',
+                    path: '/products',
+                    products: products,
+                    currentPage: page,
+                    totaProducts: totalItems,
+                    hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+                    hasPrevPage: page > 1,
+                    nextPage: page + 1,
+                    prevPage: page - 1,
+                    lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE)
+                })
+            })
+    }
 };
 
 exports.getEditProduct = (req, res, next) => {
@@ -91,9 +139,6 @@ exports.postEditProduct = (req, res, next) => {
             product.name = req.body.name;
             product.price = req.body.price;
             product.description = req.body.description;
-            product.imageUrl.detail_1 = req.body.imageUrl1;
-            product.imageUrl.detail_2 = req.body.imageUrl2;
-            product.imageUrl.detail_3 = req.body.imageUrl3;
             product.filter = req.body.filter;
             return product.save()
         })
@@ -113,4 +158,8 @@ exports.postDeleteProduct = (req, res, next) => {
             console.log('Delete product')
             res.redirect('/products');
         })
+};
+
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 };
