@@ -1,64 +1,72 @@
 <%- include('../includes/begin.ejs') %>
-    <link rel="stylesheet" href="/css/main.css">
     </head>
 
     <body>
-        <%- include('../includes/navigation.ejs') %>
-
-            <main>
-                <% if (products.length > 0) { %>
-                    <div class="grid">
-                        <% for (let product of products) { %>
-                            <article class="card product-item">
-                                <header class="card__header">
-                                    <h1 class="product__title">
-                                        <%= product.name %>
-                                    </h1>
-                                </header>
-                                <div class="card__image slider">
-                                    <a href="#slide-1<%=product._id%>">1</a>
-                                    <a href="#slide-2<%=product._id%>">2</a>
-                                    <a href="#slide-3<%=product._id%>">3</a>
-                                    <div class="slides">
-                                        <div id="slide-1<%=product._id%>">
-                                            <img src="<%=product.imageUrl.detail_1 %>" alt="<%= product.name %>">
-                                        </div>
-                                        <div id="slide-2<%=product._id%>">
-                                            <img src="<%=product.imageUrl.detail_2 %>" alt="<%= product.name %>">
-                                        </div>
-                                        <div id="slide-3<%=product._id%>">
-                                            <img src="<%=product.imageUrl.detail_3 %>" alt="<%= product.name %>">
+        <%- include('../includes/navigation.ejs',{path:path}) %>
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card card-plain">
+                                <div class="card-header card-header-primary">
+                                    <h4 class="card-title mt-0">Products Manage Table</h4>
+                                    <a href="/add-product" class="btn-add"><i class="fa fa-plus"> Add Product</i></a>
+                                </div>
+                                <% if(products.length > 0) { %>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead class="">
+                                                    <th>ID</th>
+                                                    <th>Name</th>
+                                                    <th>Price</th>
+                                                    <th>Filter</th>
+                                                    <th>Image</th>
+                                                    <th>Manage</th>
+                                                </thead>
+                                                <tbody>
+                                                    <%  for(let product of products) { %>
+                                                        <tr>
+                                                            <td>
+                                                                <%= product._id %>
+                                                            </td>
+                                                            <td>
+                                                                <%= product.name %>
+                                                            </td>
+                                                            <td>
+                                                                $
+                                                                <%= product.price %>
+                                                            </td>
+                                                            <td>
+                                                                <%= product.filter %>
+                                                            </td>
+                                                            <td>
+                                                                <img src="<%= product.imageUrl.detail_1 %>" class="img-list">
+                                                                <img src="<%= product.imageUrl.detail_2 %>" class="img-list">
+                                                                <img src="<%= product.imageUrl.detail_3 %>" class="img-list">
+                                                            </td>
+                                                            <td>
+                                                                <a href="/edit-product/<%=product._id %>?edit=true" class="btn" style="float: left;margin-right: 10px;"><i class="fa fa-pencil"></i></a>
+                                                                <form action="/delete-product" method="POST">
+                                                                    <input type="hidden" value="<%=product._id %>" name="productId">
+                                                                    <button class="btn" type="submit"><i class="fa fa-times"></i></button>
+                                                                </form>
+                                                            </td>
+                                                        </tr>
+                                                        <% }  %>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="card__content">
-                                    <h2 class="product__price">$
-                                        <%= product.price %>
-                                    </h2>
-                                    <p style="margin-top: 20px;" class="product__description">
-                                        <%= product.description %>
-                                    </p>
-                                </div>
-                                <div class="card__content">
-                                    <p class="product__filter" style="text-align: center;">
-                                        Filter: <span><%= product.filter %></span>
-                                    </p>
-                                </div>
-                                <div class="card__actions">
-                                    <a href="/edit-product/<%=product._id %>?edit=true" class="btn">Edit</a>
-                                    <form action="/delete-product" method="POST">
-                                        <input type="hidden" value="<%=product._id %>" name="productId">
-                                        <button class="btn" type="submit">Delete</button>
-                                    </form>
-
-                                </div>
-                            </article>
-                            <% } %>
+                                    <%- include('../includes/pagination.ejs',
+                                    {currentPage:currentPage,prevPage:prevPage,hasPrevPage:hasPrevPage,hasNextPage:hasNextPage,nextPage:nextPage,lastPage:lastPage,query: query}) %>
+                                        <% } else {%>
+                                            <h3 style="text-align: center; margin-top: 20px;">No product found !</h3>
+                                            <% } %>
+                            </div>
+                        </div>
                     </div>
-                    <%- include('../includes/pagination.ejs',
-                    {currentPage:currentPage,prevPage:prevPage,hasPrevPage:hasPrevPage,hasNextPage:hasNextPage,nextPage:nextPage,lastPage:lastPage}) %>
-                        <% } else { %>
-                            <h1 style="text-align: center;">No Products Found!</h1>
-                            <% } %>
-            </main>
+                </div>
+            </div>
+
             <%- include('../includes/end.ejs') %>
