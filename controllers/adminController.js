@@ -1,12 +1,72 @@
 const Product = require('../models/productModel');
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 12;
 
 exports.getIndex = (req, res, next) => {
     res.render('admin/index', {
-        pageTitle: 'Admin Page',
+        pageTitle: 'Dashboard',
         path: '/',
         editing: false
     });
+};
+
+//render trang toan bo san pham
+exports.getProducts = (req, res, next) => {
+    const page = +req.query.page || 1;
+    let totalItems;
+    if (req.query.search) {
+        const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+        Product.find({ name: regex })
+            .countDocuments()
+            .then(numOfProducts => {
+                totalItems = numOfProducts;
+                return Product
+                    .find({ name: regex })
+                    .skip((page - 1) * ITEMS_PER_PAGE)
+                    .limit(ITEMS_PER_PAGE);
+
+            })
+            .then(products => {
+                res.render('admin/product-list', {
+                    pageTitle: 'All products',
+                    path: '/products',
+                    products: products,
+                    currentPage: page,
+                    totaProducts: totalItems,
+                    hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+                    hasPrevPage: page > 1,
+                    nextPage: page + 1,
+                    prevPage: page - 1,
+                    lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
+                    query: req.query.search
+                })
+            })
+    } else {
+        Product.find()
+            .countDocuments()
+            .then(numOfProducts => {
+                totalItems = numOfProducts;
+                return Product
+                    .find()
+                    .skip((page - 1) * ITEMS_PER_PAGE)
+                    .limit(ITEMS_PER_PAGE);
+
+            })
+            .then(products => {
+                res.render('admin/product-list', {
+                    pageTitle: 'All products',
+                    path: '/products',
+                    products: products,
+                    currentPage: page,
+                    totaProducts: totalItems,
+                    hasNextPage: ITEMS_PER_PAGE * page < totalItems,
+                    hasPrevPage: page > 1,
+                    nextPage: page + 1,
+                    prevPage: page - 1,
+                    lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
+                    query: ''
+                })
+            })
+    }
 };
 
 //render trang edit hoac add product
@@ -51,64 +111,7 @@ exports.postAddProduct = (req, res, next) => {
         })
 };
 
-//render trang toan bo san pham
-exports.getProducts = (req, res, next) => {
-    const page = +req.query.page || 1;
-    let totalItems;
-    if (req.query.search) {
-        const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-        Product.find({ name: regex })
-            .countDocuments()
-            .then(numOfProducts => {
-                totalItems = numOfProducts;
-                return Product
-                    .find({ name: regex })
-                    .skip((page - 1) * ITEMS_PER_PAGE)
-                    .limit(ITEMS_PER_PAGE);
-
-            })
-            .then(products => {
-                res.render('admin/product-list', {
-                    pageTitle: 'All products',
-                    path: '/products/?search=',
-                    products: products,
-                    currentPage: page,
-                    totaProducts: totalItems,
-                    hasNextPage: ITEMS_PER_PAGE * page < totalItems,
-                    hasPrevPage: page > 1,
-                    nextPage: page + 1,
-                    prevPage: page - 1,
-                    lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE)
-                })
-            })
-    } else {
-        Product.find()
-            .countDocuments()
-            .then(numOfProducts => {
-                totalItems = numOfProducts;
-                return Product
-                    .find()
-                    .skip((page - 1) * ITEMS_PER_PAGE)
-                    .limit(ITEMS_PER_PAGE);
-
-            })
-            .then(products => {
-                res.render('admin/product-list', {
-                    pageTitle: 'All products',
-                    path: '/products',
-                    products: products,
-                    currentPage: page,
-                    totaProducts: totalItems,
-                    hasNextPage: ITEMS_PER_PAGE * page < totalItems,
-                    hasPrevPage: page > 1,
-                    nextPage: page + 1,
-                    prevPage: page - 1,
-                    lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE)
-                })
-            })
-    }
-};
-
+//render edit product
 exports.getEditProduct = (req, res, next) => {
     const editMode = req.query.edit;
     if (!editMode) {
@@ -130,6 +133,7 @@ exports.getEditProduct = (req, res, next) => {
         })
 };
 
+//post edit product
 exports.postEditProduct = (req, res, next) => {
     //lay du lieu ma nguoi dung muon cap nhat
     const productId = req.body.productId;
@@ -151,6 +155,7 @@ exports.postEditProduct = (req, res, next) => {
         })
 };
 
+//post delete product
 exports.postDeleteProduct = (req, res, next) => {
     const productId = req.body.productId;
     Product.findByIdAndRemove(productId)
