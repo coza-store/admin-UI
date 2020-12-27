@@ -19,4 +19,10 @@ router.post('/edit-product', adminController.postEditProduct);
 
 router.post('/delete-product', adminController.postDeleteProduct);
 
+// user
+router.get('/user', adminController.getUser)
+
+router.post('/add-user', adminController.postAddUser);
+
+
 module.exports = router;

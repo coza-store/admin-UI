@@ -1,4 +1,5 @@
 const Product = require('../models/productModel');
+const User = require('../models/userModel');
 const ITEMS_PER_PAGE = 12;
 
 exports.getIndex = (req, res, next) => {
@@ -167,4 +168,42 @@ exports.postDeleteProduct = (req, res, next) => {
 
 function escapeRegex(text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
+
+
+exports.getUser = (req, res, next) => {
+    res.render('admin/config-user', {
+        pageTitle: 'User',
+        path: '/user',
+        editing: false
+    });
+};
+
+//method them product moi
+exports.postAddUser= (req, res, next) => {
+    const images = req.body.image;
+    const first_name = req.body.first_name;
+    const last_name = req.body.last_name;
+    const email = req.body.email;
+    const adress = req.body.adress;
+    const password = req.body.password;
+    
+    const user = new User({
+        first_name: first_name,
+        last_name: last_name,
+        email: email,
+        images: images,
+        adress: adress,
+        password: password,
+        adminId: req.admin
+    });
+    user
+        .save()
+        .then(result => {
+            console.log('Created user');
+            res.redirect('/');
+        })
+        .catch(err => {
+            console.log(err);
+        })
 };

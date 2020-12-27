@@ -4,11 +4,11 @@
 
     <body>
         <%- include('../includes/navigation.ejs') %>
-            <main>
+            <div class="content">
                 <form class="user-form" action="/<% if(editing) { %>edit-user <% } else { %>add-user <% } %>  " method="POST">
-                    <div class="form-control">
+                    <div class="form-control" >
                         <label for="first_name">First name</label>
-                        <input type="text" name="first_name" id="first_name" value="<% if(editing) { %><%=user.first_name %><% } %>">
+                        <input type="text" name="first_name" id="first_name" value="<% if(editing) { %><%=user.first_name %><% } %>" >
                     </div>
 					<div class="form-control">
                         <label for="last">Last name</label>
@@ -45,5 +45,5 @@
 
                             <button class="btn" type="submit"><% if(editing) { %> Update user <% } else { %> Add user <% } %> </button>
                 </form>
-            </main>
+            </div>
             <%- include('../includes/end.ejs') %>
