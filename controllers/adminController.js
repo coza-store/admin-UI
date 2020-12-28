@@ -207,3 +207,19 @@ exports.postAddUser= (req, res, next) => {
             console.log(err);
         })
 };
+
+exports.login = (req, res, next) => {
+    res.render('includes/login-user', {
+        pageTitle: 'User',
+        path: '/',
+        editing: false
+    });
+};
+
+exports.logged = (req, res, next) => {
+    res.render('includes/login-user', {
+        pageTitle: 'User',
+        path: '/',
+        editing: false
+    });
+};
