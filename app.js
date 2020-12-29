@@ -1,5 +1,6 @@
 const path = require('path');
 const express = require('express');
+const session = require('express-session');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const multer = require('multer');
@@ -7,6 +8,7 @@ const adminRoutes = require('./routes/adminRoutes');
 const errorHandler = require('./controllers/errorController');
 const Admin = require('./models/adminModel');
 const app = express();
+
 
 //storage image for user
 const imageStorage = multer.diskStorage({
@@ -24,6 +26,13 @@ const imageFilter = (req, file, callback) => {
         callback(null, false);
     }
 };
+
+app.use(session({
+    resave: true, 
+    saveUninitialized: true, 
+    secret: 'somesecret', 
+    cookie: { maxAge: 60000 }})
+);
 
 app.use(multer({ storage: imageStorage, fileFilter: imageFilter }).array('imageUrl', 3));
 

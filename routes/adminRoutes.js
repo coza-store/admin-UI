@@ -20,13 +20,12 @@ router.post('/edit-product', adminController.postEditProduct);
 router.post('/delete-product', adminController.postDeleteProduct);
 
 // user
-router.get('/user', adminController.getUser)
+router.get('/user', adminController.getUser);
 
 router.post('/add-user', adminController.postAddUser);
 
-router.post('/user/login', adminController.login);
-
-
+router.get('/user/login', adminController.login);
+router.post('/user/logon', adminController.logon);
 
 
 module.exports = router;

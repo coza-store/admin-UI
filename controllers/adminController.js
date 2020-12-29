@@ -210,16 +210,29 @@ exports.postAddUser= (req, res, next) => {
 
 exports.login = (req, res, next) => {
     res.render('includes/login-user', {
-        pageTitle: 'User',
+        pageTitle: 'Login',
         path: '/',
         editing: false
     });
 };
 
-exports.logged = (req, res, next) => {
-    res.render('includes/login-user', {
-        pageTitle: 'User',
-        path: '/',
-        editing: false
-    });
+//method them product moi
+exports.logon= (req, res, next) => {
+    const body = req.body;
+
+    if (body.username == "admin" && body.password == "123456" ){
+        req.session.loggedin = true;
+        req.session.username = body.username;
+        req.session.roles = "admin";
+
+        res.redirect('/');
+
+    }
+    else {
+        req.session.loggedin = false;
+        res.redirect('/user/login');
+
+    }
+
+
 };
