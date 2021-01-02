@@ -28,6 +28,14 @@
                                                 </div>
                                             </div>
                                             <div class="product-content">
+                                                <label for="size">Import Size &nbsp;&nbsp;&nbsp;</label>
+                                                <input type="text" name="size" id="size" value="<% if(editing) { %><%=product.size %><% } %>">
+                                            </div>
+                                            <div class="product-content">
+                                                <label for="color">Import Color &nbsp;</label>
+                                                <input type="text" name="color" id="color" value="<% if(editing) { %><%=product.color %><% } %>">
+                                            </div>
+                                            <div class="product-content">
                                                 <label for="imageUrl1">Image URL 1</label>
                                                 <input type="file" name="imageUrl" id="imageUrl1">
                                             </div>

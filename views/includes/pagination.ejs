@@ -1,32 +1,22 @@
 <section class="pagination" style="justify-content: center;">
     <% if(hasPrevPage) { %>
-        <a style="border: none;" href="?page=<%=prevPage%><% if(query) { %>&search=<%=query%> <% } %>"><i class="fa fa-arrow-left"></i></a>
+        <a style="border: none;" href="?<%=prevPageQuery%>"><i class="fa fa-arrow-left"></i></a>
         <% } %>
-            <% if(currentPage !== 1 && prevPage !== 1) { %>
-                <a href="?page=1<% if(query) { %>&search=<%=query%> <% } %>">1</a>
+            <% if(hasPrevPage) { %>
+                <a href="?<%=prevPageQuery%>">
+                    <%=prevPage%>
+                </a>
                 <% } %>
-                    <% if(hasPrevPage) { %>
-                        <a href="?page=<%=prevPage%><% if(query) { %>&search=<%=query%> <% } %>">
-                            <%=prevPage%>
+                    <a href="?<%=currentPageQuery %>" class="active">
+                        <%=currentPage %>
+                    </a>
+
+                    <% if(hasNextPage) { %>
+                        <a href="?<%=nextPageQuery%>">
+                            <%=nextPage%>
                         </a>
                         <% } %>
-
-                            <a href="?page=<%=currentPage %><% if(query) { %>&search=<%=query%> <% } %>" class="active">
-                                <%=currentPage %>
-                            </a>
-
                             <% if(hasNextPage) { %>
-                                <a href="?page=<%=nextPage%><% if(query) { %>&search=<%=query%> <% } %>">
-                                    <%=nextPage%>
-                                </a>
+                                <a style="border: none;" href="?<%=nextPageQuery%>"><i class="fa fa-arrow-right"></i></a>
                                 <% } %>
-
-                                    <% if(lastPage !== currentPage && nextPage !== lastPage) { %>
-                                        <a href="?page=<%=lastPage %><% if(query) { %>&search=<%=query%> <% } %>">
-                                            <%=lastPage %>
-                                        </a>
-                                        <% } %>
-                                            <% if(hasNextPage) { %>
-                                                <a style="border: none;" href="?page=<%=nextPage%><% if(query) { %>&search=<%=query%> <% } %>"><i class="fa fa-arrow-right"></i></a>
-                                                <% } %>
 </section>

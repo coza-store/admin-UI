@@ -59,7 +59,14 @@
                                         </div>
                                     </div>
                                     <%- include('../includes/pagination.ejs',
-                                    {currentPage:currentPage,prevPage:prevPage,hasPrevPage:hasPrevPage,hasNextPage:hasNextPage,nextPage:nextPage,lastPage:lastPage,query: query}) %>
+                                    {currentPage:currentPage,
+                                    prevPage:prevPage,
+                                    hasPrevPage:hasPrevPage,
+                                    hasNextPage:hasNextPage,
+                                    nextPage:nextPage,
+                                    currentPageQuery:currentPageQuery,
+                                    nextPageQuery:nextPageQuery,
+                                    prevPageQuery:prevPageQuery}) %>
                                         <% } else {%>
                                             <h3 style="text-align: center; margin-top: 20px;">No product found !</h3>
                                             <% } %>

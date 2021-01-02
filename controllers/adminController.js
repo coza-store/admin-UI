@@ -1,5 +1,6 @@
+const { escapeRegex, toArraySize, toArrayColor } = require('../models/service/module.js');
+const queryString = require('query-string');
 const Product = require('../models/productModel');
-const User = require('../models/userModel');
 const ITEMS_PER_PAGE = 12;
 
 exports.getIndex = (req, res, next) => {
@@ -11,9 +12,16 @@ exports.getIndex = (req, res, next) => {
 };
 
 //render trang toan bo san pham
-exports.getProducts = (req, res, next) => {
+exports.getProducts = async(req, res, next) => {
     const page = +req.query.page || 1;
     let totalItems;
+    const nextQuery = {...req.query, page: page + 1 };
+    const prevQuery = {...req.query, page: page - 1 };
+    const currentQuery = {...req.query, page: page };
+    const qC = queryString.stringify(currentQuery);
+    const qN = queryString.stringify(nextQuery);
+    const qP = queryString.stringify(prevQuery);
+
     if (req.query.search) {
         const regex = new RegExp(escapeRegex(req.query.search), 'gi');
         Product.find({ name: regex })
@@ -27,18 +35,21 @@ exports.getProducts = (req, res, next) => {
 
             })
             .then(products => {
-                res.render('admin/product-list', {
+                res.render('shop/product-list', {
                     pageTitle: 'All products',
                     path: '/products',
                     products: products,
-                    currentPage: page,
+                    // user: req.user,
+                    // isAuthenticated: req.isAuthenticated(),
                     totaProducts: totalItems,
+                    currentPage: page,
+                    currentPageQuery: qC,
                     hasNextPage: ITEMS_PER_PAGE * page < totalItems,
                     hasPrevPage: page > 1,
                     nextPage: page + 1,
+                    nextPageQuery: qN,
                     prevPage: page - 1,
-                    lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
-                    query: req.query.search
+                    prevPageQuery: qP
                 })
             })
     } else {
@@ -57,14 +68,17 @@ exports.getProducts = (req, res, next) => {
                     pageTitle: 'All products',
                     path: '/products',
                     products: products,
-                    currentPage: page,
+                    // user: req.user,
+                    // isAuthenticated: req.isAuthenticated(),
                     totaProducts: totalItems,
+                    currentPage: page,
+                    currentPageQuery: qC,
                     hasNextPage: ITEMS_PER_PAGE * page < totalItems,
                     hasPrevPage: page > 1,
                     nextPage: page + 1,
+                    nextPageQuery: qN,
                     prevPage: page - 1,
-                    lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
-                    query: ''
+                    prevPageQuery: qP
                 })
             })
     }
@@ -89,6 +103,13 @@ exports.postAddProduct = (req, res, next) => {
     const price = req.body.price;
     const description = req.body.description;
     const filter = req.body.filter;
+    const size = req.body.size;
+    const color = req.body.color;
+    let sizeArr = toArraySize(size);
+    let colorArr = toArrayColor(color);
+
+
+
     const product = new Product({
         name: name,
         price: price,
@@ -99,8 +120,12 @@ exports.postAddProduct = (req, res, next) => {
             detail_3: image_3
         },
         filter: filter,
-        adminId: req.admin
+        size: sizeArr,
+        color: colorArr,
+        viewCount: 0,
+        hasSold: 0
     });
+
     product
         .save()
         .then(result => {
@@ -138,13 +163,18 @@ exports.getEditProduct = (req, res, next) => {
 exports.postEditProduct = (req, res, next) => {
     //lay du lieu ma nguoi dung muon cap nhat
     const productId = req.body.productId;
-
     Product.findById(productId.trim())
         .then(product => {
             product.name = req.body.name;
             product.price = req.body.price;
             product.description = req.body.description;
             product.filter = req.body.filter;
+            if (req.body.size) {
+                product.size = toArraySize(req.body.size)
+            }
+            if (req.body.color) {
+                product.color = toArrayColor(req.body.color)
+            }
             return product.save()
         })
         .then(result => {
@@ -164,75 +194,4 @@ exports.postDeleteProduct = (req, res, next) => {
             console.log('Delete product')
             res.redirect('/products');
         })
-};
-
-function escapeRegex(text) {
-    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-};
-
-
-exports.getUser = (req, res, next) => {
-    res.render('admin/config-user', {
-        pageTitle: 'User',
-        path: '/user',
-        editing: false
-    });
-};
-
-//method them product moi
-exports.postAddUser= (req, res, next) => {
-    const images = req.body.image;
-    const first_name = req.body.first_name;
-    const last_name = req.body.last_name;
-    const email = req.body.email;
-    const adress = req.body.adress;
-    const password = req.body.password;
-    
-    const user = new User({
-        first_name: first_name,
-        last_name: last_name,
-        email: email,
-        images: images,
-        adress: adress,
-        password: password,
-        adminId: req.admin
-    });
-    user
-        .save()
-        .then(result => {
-            console.log('Created user');
-            res.redirect('/');
-        })
-        .catch(err => {
-            console.log(err);
-        })
-};
-
-exports.login = (req, res, next) => {
-    res.render('includes/login-user', {
-        pageTitle: 'Login',
-        path: '/',
-        editing: false
-    });
-};
-
-//method them product moi
-exports.logon= (req, res, next) => {
-    const body = req.body;
-
-    if (body.username == "admin" && body.password == "123456" ){
-        req.session.loggedin = true;
-        req.session.username = body.username;
-        req.session.roles = "admin";
-
-        res.redirect('/');
-
-    }
-    else {
-        req.session.loggedin = false;
-        res.redirect('/user/login');
-
-    }
-
-
 };

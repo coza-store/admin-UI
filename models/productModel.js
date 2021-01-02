@@ -33,11 +33,10 @@ const productSchema = new Schema({
         type: String,
         require: true
     },
-    adminId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Admin',
-        required: true
-    }
+    size: { type: Array },
+    color: { type: Array },
+    viewCount: { type: Number },
+    hasSold: { type: Number }
 });
 
 module.exports = mongoose.model('Product', productSchema);

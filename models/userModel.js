@@ -3,37 +3,24 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    first_name: {
-        type: String,
-        required: true
-    },
-    last_name: {
-        type: String,
-        required: true
-    },
-    imageUrl: {
-        detail: {
-            type: String,
-            require: true
-        },
-
-    },
-    email: {
-        type: String,
-        require: true
-    },
-    adress: {
-        type: String,
-        require: true
-    },
-    password: {
-        type: String,
-        require: true
-    },
-    adminId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Admin',
-        required: true
+    username: { type: String, required: false },
+    name: { type: String, require: true },
+    email: { type: String, require: true },
+    phone: { type: String, required: false },
+    password: { type: String, require: true },
+    userImage: { type: String, require: false },
+    active: { type: Boolean, require: true },
+    token: String,
+    tokenExpiredTime: Date,
+    cart: {
+        items: [{
+            productId: { type: Schema.Types.ObjectId, ref: 'Product', require: true },
+            quantity: { type: Number, require: true },
+            size: { type: String, require: false },
+            color: { type: String, require: true }
+        }],
+        totalQty: { type: Number, require: true },
+        totalPrice: { type: Number, require: true }
     }
 });
 
