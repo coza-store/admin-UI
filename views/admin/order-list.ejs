@@ -1,0 +1,148 @@
+<%- include('../includes/begin.ejs') %>
+    <link rel="stylesheet" href="/css/filter.css" type="text/css">
+    </head>
+
+    <body>
+        <%- include('../includes/navigation.ejs',{path:path}) %>
+            <div class="content">
+                <div class="content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header card-header-primary">
+                                        <h4 class="card-title ">Order list</h4>
+                                        <p class="card-category">Careful with bill please</p>
+                                        <button class="btn-add js-show-filter"><i class="fa fa-filter"> Filter</i></button>
+                                        <button class="btn-add js-show-search"><i class="fa fa-search"> Search</i></button>
+                                        <div class="flex-w flex-sb-m">
+                                            <!-- Search product -->
+                                            <div class="dis-none panel-search w-full p-t-10 p-b-15">
+                                                <form action="/orders" method="POST">
+                                                    <div class="bor8 dis-flex">
+                                                        <button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04 btn-search">
+                                                                <i class="fa fa-search"></i>
+                                                            </button>
+                                                        <input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search" placeholder="Search by customer name or order id">
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <!-- Filter -->
+                                            <div class="dis-none panel-filter w-full p-t-10">
+                                                <form id="filter-form" action="/orders" method="POST">
+                                                    <div class="wrap-filter flex-w bg6 w-full p-lr-40 p-t-27 p-lr-15-sm">
+                                                        <div class="filter-col1 p-r-15 p-b-27">
+                                                            <div class="mtext-102 cl2 p-b-15" style="color: #666;padding-left: 6px;">
+                                                                Create date
+                                                            </div>
+
+                                                            <ul>
+                                                                <input type="text" name="sort" id="sortBody" value="<%=sort%>" hidden>
+                                                                <li class="p-b-6">
+                                                                    <button class="filter-link stext-106 trans-04 <% if(sort === 'latest') { %>filter-link-active<% } %>" value="latest" onclick="getSort(this,event)">Latest</a>
+                                                                </li>
+                                                                <li class="p-b-6">
+                                                                    <button class="filter-link stext-106 trans-04 <% if(sort === 'oldest') { %>filter-link-active<% } %>" value="oldest" onclick="getSort(this,event)">Oldest</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                             
+                                                        <div class="filter-col3 p-r-15 p-b-27">
+                                                            <div class="mtext-102 cl2 p-b-15" style="color: #666;padding-left: 6px;">
+                                                                Status
+                                                            </div>
+
+                                                            <ul>
+                                                                <input type="text" name="status" id="statusBody" value="<%=status %>"  hidden>
+                                                                <li class="p-b-6">
+                                                                    <button  class="filter-link stext-106 trans-04 <% if(status === 'unconfirmed') { %>filter-link-active<% } %>" value="unconfirmed" onclick="getStatus(this,event)">Unconfirmed</button>
+                                                                </li>
+                                                                <li class="p-b-6">
+                                                                    <button class="filter-link stext-106 trans-04 <% if(status === 'checked') { %>filter-link-active<% } %>" value="checked" onclick="getStatus(this,event)">Confirmed</button>
+                                                                </li>
+                                                                <li class="p-b-6">
+                                                                    <button class="filter-link stext-106 trans-04 <% if(status === 'ongoing') { %>filter-link-active<% } %>" value="ongoing" onclick="getStatus(this,event)">On going</button>
+                                                                </li>
+                                                                <li class="p-b-6">
+                                                                    <button class="filter-link stext-106 trans-04 <% if(status === 'received') { %>filter-link-active<% } %>" value="received" onclick="getStatus(this,event)">Received</button>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <button style="margin-top: 10px;" class="remove-filter" onclick="removeFilter(event)">Remove filter</button>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <% if(orders.length > 0){%>
+                                                <table class="table">
+                                                    <thead class="text-primary" style="text-align: center;">
+                                                        <th style="text-align:left;">Order ID</th>
+                                                        <th>Customer Name</th>
+                                                        <th>Order time</th>
+                                                        <th>Total Product</th>
+                                                        <th>Total Price</th>
+                                                        <th>Status</th>
+                                                        <th>Billing</th>
+                                                    </thead>
+                                                    <%  for(let order of orders) { %>
+                                                        <tbody style="text-align: center;">
+                                                            <tr>
+                                                                <td style="text-align: left;" id="orderId">#
+                                                                    <%=order._id  %>
+                                                                </td>
+                                                                <td>
+                                                                    <%=order.user.name  %>
+                                                                </td>
+                                                                <td>
+                                                                    <%=order.dateShow %>
+                                                                </td>
+                                                                <td>
+                                                                    <%=order.products.length  %>
+                                                                </td>
+                                                                <td class="text-primary">$
+                                                                    <%=order.totalPrice %>
+                                                                </td>
+                                                                <td>
+                                                                    <% if(order.status == 'unconfirmed'){ %>
+                                                                        <input class="order_id" type="hidden" name="orderId" value="<%=order._id %>">
+                                                                        <button class="unconfirmed-btn" onclick="confirmOrder(this)">Confirm now</button>
+                                                                        <% } else { %>
+                                                                            <% if(order.status == 'checked') { %>
+                                                                                <p class="confirmed-btn">Confirmed</p>
+                                                                                <% } %>
+                                                                                    <% if(order.status == 'ongoing') { %>
+                                                                                        <p class="ongoing-btn">On going</p>
+                                                                                        <% } %>
+                                                                                            <% if(order.status == 'received') { %>
+                                                                                                <p class="done-btn">Received</p>
+                                                                                                <% } %>
+                                                                                                    <% } %>
+                                                                </td>
+                                                                <td>Print</td>
+                                                            </tr>
+                                                        </tbody>
+                                                        <% } %>
+                                                </table>
+                                                <%- include('../includes/pagination-order.ejs',
+                                                                    {currentPage:currentPage,
+                                                                    prevPage:prevPage,
+                                                                    hasPrevPage:hasPrevPage,
+                                                                    hasNextPage:hasNextPage,
+                                                                    nextPage:nextPage}) %>
+                                                    <% } else { %>
+                                                        <h2 style="text-align: center; margin-top: 20px;">No order found</h2>
+                                                        <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <script src="/js/filter-order.js"></script>
+                        <script src="/js/pagination.js"></script>
+                        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+                        <script src="/ajax/orderAjax.js"></script>
+                        <%- include('../includes/end.ejs') %>

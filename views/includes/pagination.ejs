@@ -1,22 +1,19 @@
-<section class="pagination" style="justify-content: center;">
-    <% if(hasPrevPage) { %>
-        <a style="border: none;" href="?<%=prevPageQuery%>"><i class="fa fa-arrow-left"></i></a>
-        <% } %>
-            <% if(hasPrevPage) { %>
-                <a href="?<%=prevPageQuery%>">
-                    <%=prevPage%>
-                </a>
-                <% } %>
-                    <a href="?<%=currentPageQuery %>" class="active">
-                        <%=currentPage %>
-                    </a>
-
-                    <% if(hasNextPage) { %>
-                        <a href="?<%=nextPageQuery%>">
-                            <%=nextPage%>
-                        </a>
-                        <% } %>
-                            <% if(hasNextPage) { %>
-                                <a style="border: none;" href="?<%=nextPageQuery%>"><i class="fa fa-arrow-right"></i></a>
-                                <% } %>
-</section>
+<form id="paging-form" action="/products" method="POST">
+    <section class="pagination" style="justify-content: center;">
+        <input type="text" name="page" value="" id="pageBody" hidden>
+        <input type="text" name="sort" id="sortBody" value="<%=sort %>" hidden>
+        <input type="text" name="lowestPrice" id="lowestPriceBody" value="<%=low %>" hidden>
+        <input type="text" name="highestPrice" id="highestPriceBody" value="<%=high %>" hidden>
+        <input type="text" name="color" value="<%=color %>" id="colorBody" hidden>
+        <input type="text" name="tag" value="<%=tag %>" id="tagBody" hidden>
+        <% if(hasPrevPage) { %>
+            <button value="<%=prevPage%>" onclick="getPage(this,event)"><i class="fa fa-arrow-left"></i></button>
+            <button value="<%=prevPage%>" onclick="getPage(this,event)"><%=prevPage%></button>
+            <% } %>
+                <button class="active" value="<%=currentPage%>" onclick="getPage(this,event)"><%=currentPage%></button>
+                <% if(hasNextPage) { %>
+                    <button value="<%=nextPage%>" onclick="getPage(this,event)"><%=nextPage%></button>
+                    <button value="<%=nextPage%>" onclick="getPage(this,event)"><i class="fa fa-arrow-right"></i></button>
+                    <% } %>
+    </section>
+</form>
