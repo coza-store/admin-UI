@@ -29,7 +29,7 @@ router.post('/orders', checkAuth, adminController.postOrders);
 
 router.put('/order/confirm/:orderId', checkAuth, adminController.confirmOrder);
 
-
+router.get('/order/invoice/:orderId', checkAuth, adminController.getInvoice);
 
 
 

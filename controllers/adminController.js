@@ -1,5 +1,7 @@
-const { escapeRegex, toArraySize, toArrayColor } = require('../models/service/module.js');
-const queryString = require('query-string');
+const path = require('path');
+const fs = require('fs');
+const PDFDocument = require('pdfkit');
+const { escapeRegex, toArraySize, toArrayColor, removeAccents } = require('../models/service/module.js');
 const Product = require('../models/productModel');
 const Order = require('../models/orderModel');
 const mongoose = require('mongoose');
@@ -305,4 +307,85 @@ exports.confirmOrder = async(req, res, next) => {
     res.status(200).json({
         message: 'Success !'
     })
-}
+};
+
+exports.getInvoice = async(req, res, next) => {
+    const orderId = req.params.orderId;
+    const order = await Order.findById(orderId);
+    const invoiceName = 'invoice-' + orderId + '.pdf';
+    const invoicePath = path.join('data', 'invoices', invoiceName);
+    const pdfDoc = new PDFDocument({ margin: 50 });
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition',
+        'inline; filename="' + invoiceName + '"'
+    );
+    pdfDoc.pipe(fs.createWriteStream(invoicePath));
+    pdfDoc.pipe(res);
+
+    // Invoice header
+    pdfDoc
+        .fontSize(20)
+        .text('Coza Store', 45, 100, { align: "left" });
+    pdfDoc
+        .fontSize(13)
+        .text('379 Hudson St,New York, NY 10018', 45, 130, { align: "left" })
+        .text('Phone: (+1) 96 716 6879', 45, 150, { align: "left" })
+        .text(`Invoice #${order._id}`, 200, 100, { align: "right" })
+        .text(`Order date: ${order.dateShow}`, 200, 120, { align: "right" })
+
+    pdfDoc.text('-------------------------------', 45, 200, { align: "center" });
+    //Invoice shipping infomation
+    pdfDoc
+        .font('Helvetica')
+        .fontSize(16)
+        .text('Shipping Infomation', 45, 240)
+        .fontSize(12)
+        .text(`Customer name: ${removeAccents(order.user.name)}`, 45, 270)
+        .text(`Customer phone: ${order.user.phone}`, 45, 285)
+        .text(`Customer phone: ${order.user.phone}`, 45, 300)
+        .text(`Address: ${removeAccents(order.shipping.address)}`, 45, 315)
+        .text(`Note: ${removeAccents(order.shipping.note)}`, 45, 330)
+
+    //Detail Invoice
+    pdfDoc
+        .font('Helvetica')
+        .fontSize(16)
+        .text('Products Detail', 45, 380)
+    pdfDoc
+        .font('Helvetica')
+        .fontSize(11)
+        .text('Product name', 45, 430)
+    pdfDoc
+        .text('Size', 180, 430)
+        .text('Color', 250, 430)
+        .text('Price', 340, 430)
+        .text('Quantity', 430, 430)
+        .text('Total', 520, 430)
+
+    let vertical = 450;
+    order.products.forEach(p => {
+        pdfDoc
+            .text(p.product.name, 45, vertical)
+            .text(p.size, 180, vertical)
+            .text(p.color, 250, vertical)
+            .text(p.product.price, 340, vertical)
+            .text(p.quantity, 430, vertical)
+            .text(eval(p.quantity * p.product.price), 520, vertical, { align: "right" })
+        vertical += 20;
+    });
+    pdfDoc.text('-------------------------------------', 430, vertical, { align: "right" });
+    //total end invoice
+    vertical += 20;
+    pdfDoc
+        .text('Sub total: ', 470, vertical, )
+        .text(order.totalPrice, 520, vertical, { align: "right" });
+    vertical += 20;
+    pdfDoc
+        .text('Coupon: ', 470, vertical)
+        .text('', 520, vertical, { align: "right" });
+    vertical += 20;
+    pdfDoc
+        .text('Total: ', 470, vertical)
+        .text(order.totalPrice, 520, vertical, { align: "right" });
+    pdfDoc.end();
+};
