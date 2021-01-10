@@ -1,0 +1,89 @@
+<%- include('../includes/begin.ejs') %>
+    <link rel="stylesheet" href="/css/setting.css" type="text/css">
+    </head>
+
+    <body>
+        <%- include('../includes/navigation.ejs',{path:path}) %>
+            <div class="content" style="margin-top: 0;">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <form class="setting-form" action="/setting" method="POST" enctype="multipart/form-data">
+                            <div class="wrapper-1 bg-white" style="margin-top: 100px;">
+                                <%if(errorMessage) { %>
+                                    <div class="user-message user-message--error" style="margin-bottom: 40px;">
+                                        <%=errorMessage%>
+                                    </div>
+                                    <% }  %>
+                                        <h2 class="pb-4">Your Profiles</h2>
+                                        <div class="d-flex align-items-start py-3">
+                                            <%if(user.userImage) { %>
+                                                <img src="/<%= user.userImage %>" class="img" alt="">
+                                                <% } else { %>
+                                                    <img src="/images/user/guest-user.jpg" class="img" alt="">
+                                                    <% }  %>
+                                                        <div class="pl-sm-4 pl-2" id="img-section"> <b>Profile Photo</b>
+                                                            <p>Accepted file type .png. Less than 1MB</p>
+                                                            <input type="file" name="userImage" id="userImage" class="btn button border" style="cursor: pointer;">
+                                                        </div>
+                                        </div>
+                                        <div class="py-2">
+                                            <div class="row py-2">
+                                                <div class="col-md-12"> <label for="firstname">Your Full Name</label>
+                                                    <input type="text" class="bg-light form-control" name="name" value="<%= user.name %>">
+                                                </div>
+                                            </div>
+                                            <div class="row py-2">
+                                                <div class="col-md-12">
+                                                    <label for="email">Email Address &nbsp;
+                                                    </label>
+                                                    <input type="text" class="bg-light form-control" placeholder="example@email.com" name="email" value="<%= user.email %>">
+                                                </div>
+                                            </div>
+                                            <div class="row py-2">
+                                                <div class="col-md-12"> <label for="phone">Phone</label>
+                                                    <input type="text" class="bg-light form-control" name="phone" value="<%= user.phone %>">
+                                                </div>
+                                            </div>
+                                            <div class="py-3 pb-4">
+                                                <button class="save-button ">Save Changes</button>
+                                            </div>
+                                        </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-6">
+                        <form class="reset-form" action="/setting-password" method="POST">
+                            <div class="wrapper-1 bg-white" style="margin-top: 100px;padding-top: 75px;padding-bottom: 65px;">
+                                <%if(errorMessage2) { %>
+                                    <div class="user-message user-message--error" style="margin-bottom: 40px; font-size: 11px;">
+                                        <%=errorMessage2%>
+                                    </div>
+                                    <% }  %>
+                                        <h2 class="pb-4">Reset Password</h2>
+                                        <div class="py-2">
+                                            <div class="row py-2">
+                                                <div class="col-md-12"> <label for="current-pswd">Current Password</label>
+                                                    <input type="password" class="bg-light form-control" name="currentPswd">
+                                                </div>
+                                            </div>
+                                            <div class="row py-2">
+                                                <div class="col-md-12"> <label for="new-pswd">New Password</label>
+                                                    <input type="password" class="bg-light form-control" name="newPswd">
+                                                    <p class="hint-password-setting">*Password must have upper, lower letter, number and at least 8 characters</p>
+                                                </div>
+                                            </div>
+                                            <div class="row py-2">
+                                                <div class="col-md-12"> <label for="confirm-pswd">Confirm New Password</label>
+                                                    <input type="password" class="bg-light form-control" name="confirmPswd">
+                                                </div>
+                                            </div>
+                                            <div class="py-3 pb-4">
+                                                <button class="save-button">Save Changes</button>
+                                            </div>
+                                        </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <%- include('../includes/end.ejs') %>

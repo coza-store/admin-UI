@@ -1,4 +1,5 @@
 <%- include('../includes/begin.ejs') %>
+    <link rel="stylesheet" href="/css/filter.css" type="text/css">
     </head>
 
     <body>
@@ -10,7 +11,148 @@
                             <div class="card card-plain">
                                 <div class="card-header card-header-primary">
                                     <h4 class="card-title mt-0">Products Manage Table</h4>
-                                    <a href="/add-product" class="btn-add"><i class="fa fa-plus"> Add Product</i></a>
+                                    <% if(user.role < 3) { %>
+                                        <a href="/add-product" class="btn-add"><i class="fa fa-plus"> Add Product</i></a>
+                                        <% } %>
+                                            <button class="btn-add js-show-filter"><i class="fa fa-filter"> Filter</i></button>
+                                            <button class="btn-add js-show-search"><i class="fa fa-search"> Search</i></button>
+
+                                            <div class="flex-w flex-sb-m">
+                                                <!-- Search product -->
+                                                <div class="dis-none panel-search w-full p-t-10 p-b-15">
+                                                    <form action="/products" method="POST">
+                                                        <div class="bor8 dis-flex">
+                                                            <button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04 btn-search">
+                                                            <i class="fa fa-search"></i>
+                                                        </button>
+                                                            <input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search" placeholder="Search">
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <!-- Filter -->
+                                                <div class="dis-none panel-filter w-full p-t-10">
+                                                    <form id="filter-form" action="/products" method="POST">
+                                                        <div class="wrap-filter flex-w bg6 w-full p-lr-40 p-t-27 p-lr-15-sm">
+                                                            <div class="filter-col1 p-r-15 p-b-27">
+                                                                <div class="mtext-102 cl2 p-b-15" style="color: #666;">
+                                                                    Sort By
+                                                                </div>
+
+                                                                <ul>
+                                                                    <input type="text" name="sort" id="sortBody" value="<%=sort %>" hidden>
+                                                                    <li class="p-b-6">
+                                                                        <button class="filter-link stext-106 trans-04 <% if(sort === 'viewCount') { %>filter-link-active<% } %>" value="viewCount" onclick="getSort(this,event)">Popularity</a>
+                                                            </li>
+                                                            <li class="p-b-6">
+                                                                <button class="filter-link stext-106 trans-04 <% if(sort === 'hasSold') { %>filter-link-active<% } %>" value="hasSold" onclick="getSort(this,event)">Best Sold</a>
+                                                            </li>
+                                                            <li class="p-b-6">
+                                                                <button class="filter-link stext-106 trans-04  <% if(sort === 'lowtohigh') { %>filter-link-active<% } %>" value="lowtohigh" onclick="getSort(this,event)">Price: Low to High</a>
+                                                            </li>
+                                                            <li class="p-b-6">
+                                                                <button class="filter-link stext-106 trans-04  <% if(sort === 'hightolow') { %>filter-link-active<% } %>" value="hightolow" onclick="getSort(this,event)">Price: High to Low</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                    
+                                                    <div class="filter-col2 p-r-15 p-b-27">
+                                                        <div class="mtext-102 cl2 p-b-15" style="color: #666;">
+                                                            Price
+                                                        </div>
+                    
+                                                        <ul>
+                                                            <input type="text" name="lowestPrice" id="lowestPriceBody" value="<%=low %>" hidden>
+                                                            <input type="text" name="highestPrice" id="highestPriceBody" value="<%=high %>" hidden>
+                                                            <li class="p-b-6">
+                                                                <button class="filter-link stext-106 trans-04 <% if(priceRange === '0') { %>filter-link-active<% } %>" value="0" onclick="getPrice(this,event)">All</button>
+                                                                    </li>
+
+                                                                    <li class="p-b-6">
+                                                                        <button class="filter-link stext-106 trans-04 <% if(priceRange === '0-50') { %>filter-link-active<% } %>" value="0-50" onclick="getPrice(this,event)"> $0.00 - $50.00</button>
+                                                                    </li>
+
+                                                                    <li class="p-b-6">
+                                                                        <button class="filter-link stext-106 trans-04 <% if(priceRange === '50-100') { %>filter-link-active<% } %>" value="50-100" onclick="getPrice(this,event)">$50.00 - $100.00</button>
+                                                                    </li>
+
+                                                                    <li class="p-b-6">
+                                                                        <button class="filter-link stext-106 trans-04 <% if(priceRange === '100-150') { %>filter-link-active<% } %>" value="100-150" onclick="getPrice(this,event)">$100.00 - $150.00</button>
+                                                                    </li>
+
+                                                                    <li class="p-b-6">
+                                                                        <button class="filter-link stext-106 trans-04 <% if(priceRange === '150-200') { %>filter-link-active<% } %>" value="150-200" onclick="getPrice(this,event)">$150.00 - $200.00</button>
+                                                                    </li>
+
+                                                                    <li class="p-b-6">
+                                                                        <button class="filter-link stext-106 trans-04 <% if(priceRange === '200') { %>filter-link-active<% } %>" value="200" onclick="getPrice(this,event)">$200.00+</button>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+
+                                                            <div class="filter-col3 p-r-15 p-b-27">
+                                                                <div class="mtext-102 cl2 p-b-15" style="color: #666;">
+                                                                    Color
+                                                                </div>
+
+                                                                <ul>
+                                                                    <input type="text" name="color" value="<%=color %>" id="colorBody" hidden>
+                                                                    <li class="p-b-6">
+                                                                        <span class="fs-15 lh-12 m-r-6" style="color: #222;">
+                                                                    <i class="fa fa-circle"></i>
+                                                                </span>
+                                                                        <button class="filter-link stext-106 trans-04 <% if(color === 'Black') { %>filter-link-active<% } %>" onclick="getColor(this,event)">Black</button>
+                                                                    </li>
+                                                                    <li class="p-b-6">
+                                                                        <span class="fs-15 lh-12 m-r-6" style="color: #4272d7;">
+                                                                    <i class="fa fa-circle"></i>
+                                                                </span>
+                                                                        <button class="filter-link stext-106 trans-04 <% if(color === 'Blue') { %>filter-link-active<% } %>" onclick="getColor(this,event)">Blue</button>
+                                                                    </li>
+                                                                    <li class="p-b-6">
+                                                                        <span class="fs-15 lh-12 m-r-6" style="color: #b3b3b3;">
+                                                                    <i class="fa fa-circle"></i>
+                                                                </span>
+                                                                        <button class="filter-link stext-106 trans-04 <% if(color === 'Grey') { %>filter-link-active<% } %>" onclick="getColor(this,event)">Grey</button>
+                                                                    </li>
+                                                                    <li class="p-b-6">
+                                                                        <span class="fs-15 lh-12 m-r-6" style="color: #00ad5f;">
+                                                                    <i class="fa fa-circle"></i>
+                                                                </span>
+                                                                        <button class="filter-link stext-106 trans-04 <% if(color === 'Green') { %>filter-link-active<% } %>" onclick="getColor(this,event)">Green</button>
+                                                                    </li>
+                                                                    <li class="p-b-6">
+                                                                        <span class="fs-15 lh-12 m-r-6" style="color: #fa4251;">
+                                                                    <i class="fa fa-circle"></i>
+                                                                </span>
+                                                                        <button class="filter-link stext-106 trans-04 <% if(color === 'Red') { %>filter-link-active<% } %>" onclick="getColor(this,event)">Red</button>
+                                                                    </li>
+                                                                    <li class="p-b-6">
+                                                                        <span class="fs-15 lh-12 m-r-6" style="color: #aaa;">
+                                                                    <i class="fa fa-circle"></i>
+                                                                </span>
+                                                                        <button class="filter-link stext-106 trans-04 <% if(color === 'White') { %>filter-link-active<% } %>" onclick="getColor(this,event)">White</button>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+
+                                                            <div class="filter-col4 p-b-27">
+                                                                <div class="mtext-102 cl2 p-b-15" style="color: #666;">
+                                                                    Tags
+                                                                </div>
+                                                                <div class="flex-w p-t-4 m-r--5">
+                                                                    <input type="text" name="tag" value="<%=tag %>" id="tagBody" hidden>
+                                                                    <button class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5 <% if(tag === 'woman') { %>filter-tag-active<% } %>" onclick="getTag(this,event)">Women</button>
+                                                                    <button class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5 <% if(tag === 'men') { %>filter-tag-active<% } %>" onclick="getTag(this,event)">Men</button>
+                                                                    <button class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5 <% if(tag === 'jacket') { %>filter-tag-active<% } %>" onclick="getTag(this,event)">Jacket</button>
+                                                                    <button class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5 <% if(tag === 'bag') { %>filter-tag-active<% } %>" onclick="getTag(this,event)">Bag</button>
+                                                                </div>
+                                                            </div>
+                                                            <button class="remove-filter" onclick="removeFilter(event)">Remove filter</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
                                 </div>
                                 <% if(products.length > 0) { %>
                                     <div class="card-body">
@@ -22,6 +164,7 @@
                                                     <th>Price</th>
                                                     <th>Filter</th>
                                                     <th>Image</th>
+                                                    <th>View/Sold</th>
                                                     <th>Manage</th>
                                                 </thead>
                                                 <tbody>
@@ -46,11 +189,17 @@
                                                                 <img src="<%= product.imageUrl.detail_3 %>" class="img-list">
                                                             </td>
                                                             <td>
+                                                                <%=product.viewCount %> /
+                                                                    <%= product.hasSold %>
+                                                            </td>
+                                                            <td>
                                                                 <a href="/edit-product/<%=product._id %>?edit=true" class="btn" style="float: left;margin-right: 10px;"><i class="fa fa-pencil"></i></a>
-                                                                <form action="/delete-product" method="POST">
-                                                                    <input type="hidden" value="<%=product._id %>" name="productId">
-                                                                    <button class="btn" type="submit"><i class="fa fa-times"></i></button>
-                                                                </form>
+                                                                <% if(user.role < 3) { %>
+                                                                    <form action="/delete-product" method="POST">
+                                                                        <input type="hidden" value="<%=product._id %>" name="productId">
+                                                                        <button class="btn" type="submit"><i class="fa fa-times"></i></button>
+                                                                    </form>
+                                                                    <% } %>
                                                             </td>
                                                         </tr>
                                                         <% }  %>
@@ -64,9 +213,11 @@
                                     hasPrevPage:hasPrevPage,
                                     hasNextPage:hasNextPage,
                                     nextPage:nextPage,
-                                    currentPageQuery:currentPageQuery,
-                                    nextPageQuery:nextPageQuery,
-                                    prevPageQuery:prevPageQuery}) %>
+                                    sort:sort,
+                                    low:low,
+                                    high:high,
+                                    color:color,
+                                    tag:tag}) %>
                                         <% } else {%>
                                             <h3 style="text-align: center; margin-top: 20px;">No product found !</h3>
                                             <% } %>
@@ -75,5 +226,6 @@
                     </div>
                 </div>
             </div>
-
+            <script src="/js/filter.js"></script>
+            <script src="/js/pagination.js"></script>
             <%- include('../includes/end.ejs') %>

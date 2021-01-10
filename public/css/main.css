@@ -83,6 +83,7 @@
 .btn-add:hover,
 .btn-add:active {
     background-color: white;
+    color: #ab47bc;
 }
 
 .btn {
@@ -126,25 +127,58 @@
     width: 100%;
 }
 
+.admin-content label {
+    text-transform: capitalize;
+    color: #555;
+    margin-right: 10px;
+}
+
+.admin-content input {
+    border: 1px solid #5555;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.admin-content input::placeholder {
+    font-size: 13px;
+    font-style: italic;
+}
+
 .pagination {
-    margin-top: 2rem;
-    margin-bottom: 3rem;
+    margin-top: 70px;
+    margin-bottom: 10px;
     text-align: center;
 }
 
-.pagination a {
+.pagination button {
+    cursor: pointer;
     text-decoration: none;
     color: #000;
     padding: 5px 6px 5px 6px;
     margin: 0 6px;
+    border: none;
 }
 
-.pagination a:hover,
-.pagination a:active {
+.pagination button:hover,
+.pagination button:active {
     text-decoration: underline;
 }
 
-.pagination a.active {
-    background: #000;
-    color: white;
+.pagination button.active {
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.logout-btn {
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    text-align: left;
+    padding: 0;
+    cursor: pointer;
+}
+
+.logout-btn:hover {
+    color: white !important;
 }

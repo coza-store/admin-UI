@@ -1,0 +1,113 @@
+<%- include('../includes/begin.ejs') %>
+    <link rel="stylesheet" href="/css/filter.css" type="text/css">
+    <link rel="stylesheet" href="/css/setting.css" type="text/css">
+
+    </head>
+
+    <body>
+        <%- include('../includes/navigation.ejs',{path:path}) %>
+            <div class="content">
+                <div class="content">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header card-header-primary">
+                                        <h4 class="card-title ">Admin List</h4>
+                                        <p class="card-category">Coza Store all admin</p>
+                                        <% if(user.role == 1) { %>
+                                            <a href="/add-admin" class="btn-add"><i class="fa fa-plus"> Add New Admin</i></a>
+                                            <% } %>
+                                                <button class="btn-add js-show-search"><i class="fa fa-search"> Search</i></button>
+                                                <div class="flex-w flex-sb-m">
+                                                    <!-- Search product -->
+                                                    <div class="dis-none panel-search w-full p-t-10 p-b-15">
+                                                        <form action="/admins" method="POST">
+                                                            <div class="bor8 dis-flex">
+                                                                <button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04 btn-search">
+                                                                <i class="fa fa-search"></i>
+                                                            </button>
+                                                                <input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search" placeholder="Search by customer name or phone">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <% if(admins.length > 0) { %>
+                                                <table class="table">
+                                                    <thead class="text-primary" style="text-align: center;">
+                                                        <th style="text-align:left;">Admin ID</th>
+                                                        <th>Full Name</th>
+                                                        <th>Email</th>
+                                                        <th>Phone</th>
+                                                        <th>Role</th>
+                                                        <th></th>
+                                                    </thead>
+                                                    <%  for(let admin of admins) { %>
+                                                        <tbody style="text-align: center;">
+                                                            <tr>
+                                                                <td style="text-align: left;" id="orderId">#
+                                                                    <%=admin._id  %>
+                                                                </td>
+                                                                <td>
+                                                                    <%=admin.name  %>
+                                                                </td>
+                                                                <td>
+                                                                    <%=admin.email  %>
+                                                                </td>
+                                                                <td>
+                                                                    <%=admin.phone  %>
+                                                                </td>
+                                                                <td>
+                                                                    <% if(admin.role == 1){ %>
+                                                                        Boss
+                                                                        <% } %>
+                                                                            <% if(admin.role == 2){ %>
+                                                                                Manager
+                                                                                <% } %>
+                                                                                    <% if(admin.role == 3){ %>
+                                                                                        Staff
+                                                                                        <% } %>
+                                                                </td>
+                                                                <td style="padding: 0px;">
+                                                                    <% if(user.role < 3 && user._id.toString() !== admin._id.toString()) { %>
+                                                                        <input class="customer_id" type="hidden" name="adminId" value="<%=admin._id %>">
+                                                                        <% if(admin.lock == false) { %>
+                                                                            <button class="lock-btn" onclick="changeAdminLockStatus(this)">Lock this admin</button>
+                                                                            <% } else { %>
+                                                                                <button class="unlock-btn" onclick="changeAdminLockStatus(this)">Unlock this admin</button>
+                                                                                <% } %>
+                                                                                    <% } %>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                        <% } %>
+                                                </table>
+                                                <form id="paging-form" action="/admins" method="POST">
+                                                    <section class="pagination" style="justify-content: center;">
+                                                        <input type="text" name="page" value="" id="pageBody" hidden>
+                                                        <% if(hasPrevPage) { %>
+                                                            <button value="<%=prevPage%>" onclick="getPage(this,event)"><i class="fa fa-arrow-left"></i></button>
+                                                            <button value="<%=prevPage%>" onclick="getPage(this,event)"><%=prevPage%></button>
+                                                            <% } %>
+                                                                <button class="active" value="<%=currentPage%>" onclick="getPage(this,event)"><%=currentPage%></button>
+                                                                <% if(hasNextPage) { %>
+                                                                    <button value="<%=nextPage%>" onclick="getPage(this,event)"><%=nextPage%></button>
+                                                                    <button value="<%=nextPage%>" onclick="getPage(this,event)"><i class="fa fa-arrow-right"></i></button>
+                                                                    <% } %>
+                                                    </section>
+                                                </form>
+                                                <% } else { %>
+                                                    <h2 style="text-align: center; margin-top: 20px;">No admin found</h2>
+                                                    <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <script src="/js/pagination.js"></script>
+                        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+                        <script src="/ajax/lockAjax.js"></script>
+                        <%- include('../includes/end.ejs') %>

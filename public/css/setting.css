@@ -1,0 +1,77 @@
+.user-message {
+    margin: 0px auto;
+    margin-bottom: 20px;
+    width: 290px;
+    padding: 0.4rem;
+    border: none;
+    background: transparent;
+    text-align: center;
+}
+
+.user-message--error {
+    color: red;
+}
+
+.wrapper-1 {
+    padding: 30px 50px;
+    margin: 20px auto;
+}
+
+.form-control {
+    border-radius: 10px
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border: 1.5px solid #333
+}
+
+.save-button {
+    background-color: #9c27b0;
+    margin-right: 10px;
+    color: #fff;
+    padding: 5px 7px 5px 7px;
+    cursor: pointer;
+    border: none;
+}
+
+.save-button:hover {
+    background-color: #b14ac4;
+}
+
+.hint-password-setting {
+    text-align: left;
+    font-size: 13px;
+    color: red;
+    font-style: italic;
+}
+
+.align-items-start img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.lock-btn,
+.unlock-btn {
+    border: 2px solid;
+    margin: 15px 0px;
+    background-color: transparent;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.lock-btn:focus,
+.unlock-btn:focus {
+    outline: none !important;
+}
+
+.lock-btn {
+    border-color: red;
+    color: red;
+}
+
+.unlock-btn {
+    color: blue;
+    border-color: blue;
+}

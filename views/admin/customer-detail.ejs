@@ -1,0 +1,94 @@
+<%- include('../includes/begin.ejs') %>
+    <link rel="stylesheet" href="/css/setting.css" type="text/css">
+    </head>
+
+    <body>
+        <%- include('../includes/navigation.ejs',{path:path}) %>
+            <div class="content">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <div class="wrapper-1 bg-white">
+                            <h4 class="pb-4">Profiles #
+                                <%=customer._id  %>
+                            </h4>
+                            <div class="d-flex align-items-start py-3">
+                                <%if(customer.userImage) { %>
+                                    <img src="/<%=customer.userImage %>" class="img" alt="">
+                                    <% } else { %>
+                                        <img src="/images/user/guest-user.jpg" class="img" alt="">
+                                        <% }  %>
+                            </div>
+                            <div class="py-2">
+                                <div class="row py-2">
+                                    <div class="col-md-12"> <label for="firstname">Customer Full Name</label>
+                                        <input type="text" class="bg-light form-control" name="name" value="<%= customer.name %>">
+                                    </div>
+                                </div>
+                                <div class="row py-2">
+                                    <div class="col-md-12"> <label for="firstname">Username</label>
+                                        <input type="text" class="bg-light form-control" name="name" value="<%= customer.username %>">
+                                    </div>
+                                </div>
+                                <div class="row py-2">
+                                    <div class="col-md-12">
+                                        <label for="email">Email  &nbsp;
+                                                </label>
+                                        <input type="text" class="bg-light form-control" placeholder="example@email.com" name="email" value="<%= customer.email %>">
+                                    </div>
+                                </div>
+                                <div class="row py-2">
+                                    <div class="col-md-12"> <label for="phone">Phone</label>
+                                        <input type="text" class="bg-light form-control" name="phone" value="<%= customer.phone %>">
+                                    </div>
+                                </div>
+                                <% if(user.role < 3) { %>
+                                    <input class="customer_id" type="hidden" name="customerId" value="<%=customer._id %>">
+                                    <% if(customer.lock == false) { %>
+                                        <button class="lock-btn" onclick="changeLockStatus(this)">Lock this user</button>
+                                        <% } else { %>
+                                            <button class="unlock-btn" onclick="changeLockStatus(this)">Unlock this user</button>
+                                            <% } %>
+                                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="wrapper-1 bg-white">
+                            <h4 class="pb-4" style="text-align: center;">Recently Bought</h4>
+                            <% if(orders.length > 0){%>
+                                <table class="table">
+                                    <thead class="text-primary" style="text-align: center;">
+                                        <th style="text-align:left;">Order ID</th>
+                                        <th>Order time</th>
+                                        <th>Total Product</th>
+                                        <th>Total Price</th>
+                                    </thead>
+                                    <%  for(let order of orders) { %>
+                                        <tbody style="text-align: center;">
+                                            <tr>
+                                                <td style="text-align: left; font-size: 15px;">#
+                                                    <%=order._id  %>
+                                                </td>
+                                                <td>
+                                                    <%=order.dateShow %>
+                                                </td>
+                                                <td>
+                                                    <%=order.products.length  %>
+                                                </td>
+                                                <td class="text-primary">$
+                                                    <%=order.totalPrice.toFixed(2) %>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        <% } %>
+                                </table>
+                                <% } else {%>
+                                    <h2 style="text-align: center; margin-top: 20px;">User has not bought anything</h2>
+                                    <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+            <script src="/ajax/lockAjax.js"></script>
+            <%- include('../includes/end.ejs') %>

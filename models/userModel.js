@@ -10,6 +10,7 @@ const userSchema = new Schema({
     password: { type: String, require: true },
     userImage: { type: String, require: false },
     active: { type: Boolean, require: true },
+    lock: { type: Boolean, required: false, default: false },
     token: String,
     tokenExpiredTime: Date,
     cart: {

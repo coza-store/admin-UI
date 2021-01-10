@@ -1,0 +1,47 @@
+<%- include('../includes/begin.ejs') %>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/setting.css" type="text/css">
+
+    </head>
+
+    <body>
+        <%- include('../includes/navigation.ejs') %>
+            <div class="content" style="margin-top: 35px;">
+                <form action="/add-admin" method="POST">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="bg-edit">
+                                    <%if(errorMessage) { %>
+                                        <div class="user-message user-message--error">
+                                            <%=errorMessage%>
+                                        </div>
+                                        <% }  %>
+                                            <div class="admin-content">
+                                                <label for="name">Full name</label>
+                                                <input type="text" name="name" id="name" value="<%=oldData.name  %>">
+                                                <div class="admin-content">
+                                                    <label for="mail">Email &nbsp;</label>
+                                                    <input type="text" name="mail" id="mail" value="<%=oldData.email  %>">
+                                                </div>
+                                                <div class="admin-content">
+                                                    <label for="oassword">Password &nbsp;</label>
+                                                    <input type="text" disabled placeholder="Default password is LoveCozaStore2021">
+                                                </div>
+                                            </div>
+                                            <div class="admin-content">
+                                                <label for="phone">Phone &nbsp;&nbsp;&nbsp;</label>
+                                                <input type="text" name="phone" id="phone" value="<%=oldData.phone  %>">
+                                            </div>
+                                            <div class="admin-content">
+                                                <label for="role">Role &nbsp;</label>
+                                                <input type="text" name="role" id="role">
+                                            </div>
+                                            <button class="btn" type="submit">Add New Admin</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <%- include('../includes/end.ejs') %>
