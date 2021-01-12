@@ -8,8 +8,8 @@ const Order = require('../models/orderModel');
 const User = require('../models/userModel');
 const Admin = require('../models/adminModel');
 const mongoose = require('mongoose');
-const ITEMS_PER_PAGE = process.env.ITEMS_PER_PAGE;
-const USERS_PER_PAGE = process.env.USERS_PER_PAGE;
+const ITEMS_PER_PAGE = 12;
+const USERS_PER_PAGE = 4;
 
 exports.getIndex = async(req, res, next) => {
     const productCount = await Product.find().countDocuments();

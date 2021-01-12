@@ -1,5 +1,4 @@
 require('dotenv').config();
-require('./config/passport');
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -23,6 +22,7 @@ const store = new MongoDBStore({
     collection: 'adsessions'
 });
 
+require('./config/passport');
 
 //storage image handle
 const productImageStorage = multer.diskStorage({

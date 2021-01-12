@@ -1,6 +1,5 @@
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
-const Admin = require('../models/adminModel');
 const { validationResult } = require('express-validator/check');
 
 //render trang dang nhap
