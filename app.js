@@ -1,3 +1,5 @@
+require('dotenv').config();
+require('./config/passport');
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -16,12 +18,11 @@ const passport = require('passport');
 
 const app = express();
 
-const MONGODB_URL = 'mongodb+srv://admin:admincoza@cluster0.cjf9m.mongodb.net/coza-db';
 const store = new MongoDBStore({
-    uri: MONGODB_URL,
+    uri: process.env.MONGODB_URL,
     collection: 'adsessions'
 });
-require('./config/passport');
+
 
 //storage image handle
 const productImageStorage = multer.diskStorage({
@@ -54,7 +55,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use(session({
-    secret: 'adsecret',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: store,
@@ -83,7 +84,7 @@ app.use(authRoutes);
 app.use(errorHandler.render404Page);
 
 mongoose
-    .connect(MONGODB_URL)
+    .connect(process.env.MONGODB_URL)
     .then(result => {
         app.listen(process.env.PORT || 4000);
         console.log('Connected to Database');
