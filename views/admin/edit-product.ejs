@@ -20,7 +20,7 @@
                                                 <input type="text" name="name" id="name" value="<% if(editing) { %><%=product.name %><% } %>">
                                                 <div class="product-content">
                                                     <label for="price">Product Price &nbsp;</label>
-                                                    <input type="number" name="price" id="price" step="0.01" value="<% if(editing) { %><%=product.price %><% } %>">
+                                                    <input type="number" name="price" id="price" step="0.01" min="1" value="<% if(editing) { %><%=product.price %><% } %>">
                                                 </div>
                                                 <div class="product-content">
                                                     <label for="filter">Product Filter &nbsp;</label>
