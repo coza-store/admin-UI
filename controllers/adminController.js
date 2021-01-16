@@ -361,7 +361,6 @@ exports.getInvoice = async(req, res, next) => {
         .fontSize(12)
         .text(`Customer name: ${removeAccents(order.user.name)}`, 45, 270)
         .text(`Customer phone: ${order.user.phone}`, 45, 285)
-        .text(`Customer phone: ${order.user.phone}`, 45, 300)
         .text(`Address: ${removeAccents(order.shipping.address)}`, 45, 315)
         .text(`Note: ${removeAccents(order.shipping.note)}`, 45, 330)
 
