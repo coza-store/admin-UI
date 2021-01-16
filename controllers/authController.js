@@ -141,13 +141,14 @@ exports.postSetting = async(req, res, next) => {
 exports.postResetSetting = async(req, res, next) => {
     const currentPassword = req.body.currentPswd;
     const newPassword = req.body.newPswd;
-    let errors = validationResult(req);;
+    let message;
     if (!req.user.validPassword(currentPassword)) {
-        errors.array()[0].msg = 'Current Password is incorrect';
+        message = 'Current Password is incorrect';
     }
     if (newPassword == currentPassword) {
-        errors.array()[0].msg = 'New password must be different from current'
+        message = 'New password must be different from current'
     }
+    let errors = validationResult(req);
     if (!errors.isEmpty()) {
         res.status(422).render('auth/setting', {
             pageTitle: 'Settings',
@@ -155,7 +156,7 @@ exports.postResetSetting = async(req, res, next) => {
             isAuthenticated: req.isAuthenticated(),
             user: req.user,
             errorMessage: '',
-            errorMessage2: errors.array()[0].msg,
+            errorMessage2: errors.array()[0].msg ? errors.array()[0].msg : message,
         });
     }
     bcrypt.hash(newPassword, 12)
@@ -164,7 +165,7 @@ exports.postResetSetting = async(req, res, next) => {
             return req.user.save();
         })
         .then(result => {
-            res.redirect('/setting');
+            return res.redirect('/setting');
         })
         .catch(err => console.log(err));
 };
